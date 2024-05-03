@@ -1,12 +1,12 @@
 const db = require('../pool');
 
-exports.insertUser = async (user) => {
+exports.insert_user = async (user) => {
   const {
     name, nickname, email, password, created_at, updated_at,
   } = user;
 
   try {
-    const text = 'INSERT INTO users (name, nickname, email, password, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *';
+    const text = 'INSERT INTO users (name, nickname, email, password, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
     const values = [
       name,
       nickname,
