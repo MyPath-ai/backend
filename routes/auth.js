@@ -4,12 +4,19 @@ const auth_controller = require('../controllers/auth.js');
 const router = express.Router();
 
 /**
- * @openapi
- * /register:
+ * @swagger
+ * /auth/v1/register:
  *   post:
  *     tags:
  *       - Authentication
  *     summary: Register a new user in the system
+ *     parameters:
+ *       - name: apikey
+ *         in: header
+ *         required: true
+ *         schema:
+ *           type: string
+ *           format: password
  *     requestBody:
  *       required: true
  *       content:
@@ -96,7 +103,7 @@ router.post('/register', auth_controller.register);
 
 /**
  * @swagger
- * /login:
+ * /auth/v1/login:
  *   post:
  *     tags:
  *       - Authentication
