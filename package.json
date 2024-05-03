@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint ./",
-    "start": "nodemon index.js"
+    "start": "nodemon index.js",
+    "resetdb": "node ./db/resetDatabase.js && echo 'Database reset successfully.' && npx knex migrate:latest && echo 'Migration completed.'"
   },
   "author": "shirologic",
   "license": "ISC",
