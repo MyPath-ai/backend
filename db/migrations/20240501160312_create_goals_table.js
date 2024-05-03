@@ -1,9 +1,10 @@
+/* eslint-disable func-names */
 /**
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
 exports.up = function (knex) {
-  return knex.schema.createTable('goals', table => {
+  return knex.schema.createTable('goals', (table) => {
     table.increments('id').primary();
     table.integer('vision_id').unsigned().notNullable();
     table.string('name').notNullable();
@@ -15,8 +16,7 @@ exports.up = function (knex) {
     table.timestamp('updated_at').defaultTo(knex.fn.now());
 
     table.foreign('vision_id').references('id').inTable('visions').onDelete('CASCADE');
-  }).then(() => {
-    return knex.raw(`
+  }).then(() => knex.raw(`
       CREATE OR REPLACE FUNCTION update_updated_at_column()
       RETURNS TRIGGER AS $$
       BEGIN
@@ -24,15 +24,12 @@ exports.up = function (knex) {
         RETURN NEW;
       END;
       $$ language 'plpgsql';
-    `);
-  }).then(() => {
-    return knex.raw(`
+    `)).then(() => knex.raw(`
       CREATE TRIGGER update_goals_updated_at
       BEFORE UPDATE ON goals
       FOR EACH ROW
       EXECUTE FUNCTION update_updated_at_column();
-    `);
-  });
+    `));
 };
 
 /**
@@ -44,4 +41,3 @@ exports.down = function (knex) {
     .then(() => knex.raw('DROP FUNCTION IF EXISTS update_updated_at_column'))
     .then(() => knex.schema.dropTable('goals'));
 };
-
