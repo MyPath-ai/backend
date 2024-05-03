@@ -1,15 +1,21 @@
 const jwt = require('jsonwebtoken');
 const Joi = require('joi');
 const bcrypt = require('bcryptjs');
-const check_email_existence = require('../db/func/auth/check_email');
-const insert_user = require('../db/func/auth/insert_user');
-const check_login = require('../db/func/auth/check_login');
-const check_uid = require('../db/func/auth/check_uid');
+const { check_email_existence } = require('../db/func/auth/check_email');
+const { insert_user } = require('../db/func/auth/insert_user');
+const { check_login } = require('../db/func/auth/check_login');
+const { check_uid } = require('../db/func/auth/check_uid');
 
 exports.register = async (req, res) => {
   try {
     const { apikey } = req.headers;
-    if (apikey !== process.env.apikey) {
+    if (!apikey) {
+      return res.status(401).json({
+        error: true,
+        message: 'Unauthorized: API KEY not Found',
+      });
+    }
+    if (apikey !== process.env.API_KEY) {
       return res.status(401).json({
         error: true,
         message: 'Unauthorized: Invalid API KEY',
