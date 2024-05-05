@@ -52,6 +52,7 @@ db.connect()
 
 // Define Routes
 app.use('/auth/v1', require('./routes/auth'));
+app.use('/vision/v1', require('./routes/vision'));
 
 // Start the server
 const port = process.env.API_PORT || 8080;

@@ -11,8 +11,8 @@ exports.up = function (knex) {
     table.datetime('start_date');
     table.datetime('due_date');
     table.boolean('finished').defaultTo(false);
-    table.timestamp('created_at').defaultTo(knex.fn.now());
-    table.timestamp('updated_at').defaultTo(knex.fn.now());
+    table.timestamp('created_at');
+    table.timestamp('updated_at');
 
     table.foreign('goal_id').references('id').inTable('goals').onDelete('CASCADE');
   }).then(() => knex.raw(`

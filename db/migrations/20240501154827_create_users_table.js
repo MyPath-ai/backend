@@ -10,8 +10,8 @@ exports.up = function (knex) {
     table.string('nickname');
     table.string('email').notNullable().unique();
     table.string('password').notNullable();
-    table.timestamp('created_at').defaultTo(knex.fn.now());
-    table.timestamp('updated_at').defaultTo(knex.fn.now());
+    table.timestamp('created_at');
+    table.timestamp('updated_at');
   }).then(() => knex.raw(`
       CREATE OR REPLACE FUNCTION update_updated_at_column()
       RETURNS TRIGGER AS $$
