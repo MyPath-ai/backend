@@ -1,5 +1,6 @@
 const express = require('express');
 const visions_controller = require('../controllers/visions.js');
+const { token_check } = require('../controllers/auth.js');
 
 const router = express.Router();
 
@@ -66,6 +67,19 @@ const router = express.Router();
  *                 message:
  *                   type: string
  *                   example: "Bad Request: Validation or Vision Name Exist"
+ *       401:
+ *         description: Unauthorized due to Token Problem
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Unauthorized: Token expired"
  *       500:
  *         description: Server error during vision creation
  *         content:
@@ -80,7 +94,7 @@ const router = express.Router();
  *                   type: string
  *                   example: "Server Error: Create Vision"
  */
-router.post('/create', visions_controller.create_vision);
+router.post('/create', token_check, visions_controller.create_vision);
 
 /**
  * @swagger
@@ -158,6 +172,19 @@ router.post('/create', visions_controller.create_vision);
  *                 message:
  *                   type: string
  *                   example: "Bad Request: Validation"
+ *       401:
+ *         description: Unauthorized due to Token Problem
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Unauthorized: Token expired"
  *       500:
  *         description: Server error during visions retrieval
  *         content:
@@ -261,6 +288,19 @@ router.get('/show', visions_controller.show_visions);
  *                 message:
  *                   type: string
  *                   example: "Bad Request: Validation or Vision Name Exists in Other Vision"
+ *       401:
+ *         description: Unauthorized due to Token Problem
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Unauthorized: Token expired"
  *       404:
  *         description: Vision not found or does not belong to user
  *         content:
@@ -324,6 +364,19 @@ router.put('/update', visions_controller.update_vision);
  *                 message:
  *                   type: string
  *                   example: "Delete Vision: Succeed"
+ *       401:
+ *         description: Unauthorized due to Token Problem
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: "Unauthorized: Token expired"
  *       404:
  *         description: Vision not found or does not belong to user
  *         content:
@@ -352,7 +405,5 @@ router.put('/update', visions_controller.update_vision);
  *                   example: "Server Error: Delete Vision"
  */
 router.delete('/delete', visions_controller.delete_vision);
-
-module.exports = router;
 
 module.exports = router;

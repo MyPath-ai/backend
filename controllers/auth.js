@@ -123,9 +123,9 @@ exports.token_check = async (req, res, next) => {
   try {
     const { authorization } = req.headers;
     if (!authorization) {
-      return res.status(400).json({
+      return res.status(401).json({
         error: true,
-        message: 'Bad Request: Token not found',
+        message: 'Unauthorized: Token not found',
       });
     }
 
