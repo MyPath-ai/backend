@@ -1,16 +1,16 @@
 const express = require('express');
-const visions_controller = require('../controllers/visions.js');
+const tasks_controller = require('../controllers/tasks.js');
 const { token_check } = require('../controllers/auth.js');
 
 const router = express.Router();
 
 /**
  * @swagger
- * /vision/v1/create:
+ * /task/v1/create:
  *   post:
  *     tags:
- *       - Visions
- *     summary: Create a new vision for a user
+ *       - Tasks
+ *     summary: Create new tasks associated with a specific goal
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -20,31 +20,36 @@ const router = express.Router();
  *           schema:
  *             type: object
  *             properties:
- *               user_id:
+ *               goal_id:
  *                 type: number
- *                 description: User ID of the vision owner
+ *                 description: ID of the goal this task belongs to
  *                 example: 1
- *               name:
- *                 type: string
- *                 description: Name of the vision
- *                 example: "Build a new app"
- *               start_date:
- *                 type: string
- *                 format: date
- *                 description: Start date of the vision
- *                 example: "2024-01-01"
- *               due_date:
- *                 type: string
- *                 format: date
- *                 description: Due date of the vision
- *                 example: "2024-12-31"
- *               finished:
- *                 type: boolean
- *                 description: Status of the vision
- *                 example: false
+ *               tasks:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     name:
+ *                       type: string
+ *                       description: Name of the task
+ *                       example: "Design database schema"
+ *                     start_date:
+ *                       type: string
+ *                       format: date
+ *                       description: Start date of the task
+ *                       example: "2024-02-01"
+ *                     due_date:
+ *                       type: string
+ *                       format: date
+ *                       description: Due date of the task
+ *                       example: "2024-03-01"
+ *                     finished:
+ *                       type: boolean
+ *                       description: Completion status of the task
+ *                       example: false
  *     responses:
  *       200:
- *         description: Vision created successfully
+ *         description: Tasks created successfully
  *         content:
  *           application/json:
  *             schema:
@@ -55,9 +60,9 @@ const router = express.Router();
  *                   example: false
  *                 message:
  *                   type: string
- *                   example: "Create Vision: Succeed"
+ *                   example: "Create Task: Succeed"
  *       400:
- *         description: Bad request due to validation or vision name exists
+ *         description: Bad request due to validation error
  *         content:
  *           application/json:
  *             schema:
@@ -68,7 +73,7 @@ const router = express.Router();
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: "Bad Request: Validation or Vision Name Exist"
+ *                   example: "Bad Request: Validation"
  *       401:
  *         description: Unauthorized due to Token Problem
  *         content:
@@ -83,7 +88,7 @@ const router = express.Router();
  *                   type: string
  *                   example: "Unauthorized: Token expired"
  *       500:
- *         description: Server error during vision creation
+ *         description: Server error during task creation
  *         content:
  *           application/json:
  *             schema:
@@ -94,39 +99,39 @@ const router = express.Router();
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: "Server Error: Create Vision"
+ *                   example: "Server Error: Create Task"
  */
-router.post('/create', token_check, visions_controller.create_vision);
+router.post('/create', token_check, tasks_controller.create_task);
 
 /**
  * @swagger
- * /vision/v1/show:
+ * /task/v1/show:
  *   get:
  *     tags:
- *       - Visions
- *     summary: Show all visions based on user and filters
+ *       - Tasks
+ *     summary: Show all tasks based on goal and filters
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: query
- *         name: user_id
+ *         name: goal_id
  *         schema:
  *           type: number
  *         required: true
- *         description: The ID of the user whose visions are to be displayed
+ *         description: The ID of the goal whose tasks are to be displayed
  *       - in: query
  *         name: finished
  *         schema:
  *           type: boolean
- *         description: Filter for the completion status of the visions
+ *         description: Filter for the completion status of the tasks
  *       - in: query
  *         name: search
  *         schema:
  *           type: string
- *         description: Search term to filter the visions
+ *         description: Search term to filter the tasks
  *     responses:
  *       200:
- *         description: Successfully retrieved visions
+ *         description: Successfully retrieved tasks
  *         content:
  *           application/json:
  *             schema:
@@ -140,8 +145,8 @@ router.post('/create', token_check, visions_controller.create_vision);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: "Visions Data Fetch: Succeed"
- *                 visions:
+ *                   example: "Tasks Data Fetch: Succeed"
+ *                 tasks:
  *                   type: array
  *                   items:
  *                     type: object
@@ -151,15 +156,15 @@ router.post('/create', token_check, visions_controller.create_vision);
  *                         example: 1
  *                       name:
  *                         type: string
- *                         example: "Build a new app"
+ *                         example: "Design database schema"
  *                       start_date:
  *                         type: string
  *                         format: date
- *                         example: "2024-01-01"
+ *                         example: "2024-02-01"
  *                       due_date:
  *                         type: string
  *                         format: date
- *                         example: "2024-12-31"
+ *                         example: "2024-03-01"
  *                       finished:
  *                         type: boolean
  *                         example: false
@@ -190,7 +195,7 @@ router.post('/create', token_check, visions_controller.create_vision);
  *                   type: string
  *                   example: "Unauthorized: Token expired"
  *       500:
- *         description: Server error during visions retrieval
+ *         description: Server error during tasks retrieval
  *         content:
  *           application/json:
  *             schema:
@@ -201,17 +206,17 @@ router.post('/create', token_check, visions_controller.create_vision);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: "Server Error: Show Visions"
+ *                   example: "Server Error: Show Tasks"
  */
-router.get('/show', visions_controller.show_visions);
+router.get('/show', token_check, tasks_controller.show_tasks);
 
 /**
  * @swagger
- * /vision/v1/update:
+ * /task/v1/update:
  *   put:
  *     tags:
- *       - Visions
- *     summary: Update an existing vision
+ *       - Tasks
+ *     summary: Update an existing task
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -223,33 +228,33 @@ router.get('/show', visions_controller.show_visions);
  *             properties:
  *               id:
  *                 type: number
- *                 description: Vision ID to update
+ *                 description: Task ID to update
  *                 example: 1
- *               user_id:
+ *               goal_id:
  *                 type: number
- *                 description: User ID of the vision owner
+ *                 description: Goal ID of the task
  *                 example: 1
  *               name:
  *                 type: string
- *                 description: Updated name of the vision
- *                 example: "Build an awesome app"
+ *                 description: Updated name of the task
+ *                 example: "Update database schema"
  *               start_date:
  *                 type: string
  *                 format: date
- *                 description: Updated start date of the vision
- *                 example: "2024-02-01"
+ *                 description: Updated start date of the task
+ *                 example: "2024-02-10"
  *               due_date:
  *                 type: string
  *                 format: date
- *                 description: Updated due date of the vision
- *                 example: "2024-11-30"
+ *                 description: Updated due date of the task
+ *                 example: "2024-04-01"
  *               finished:
  *                 type: boolean
- *                 description: Updated status of the vision
+ *                 description: Updated status of the task
  *                 example: true
  *     responses:
  *       200:
- *         description: Vision updated successfully
+ *         description: Task updated successfully
  *         content:
  *           application/json:
  *             schema:
@@ -260,8 +265,8 @@ router.get('/show', visions_controller.show_visions);
  *                   example: false
  *                 message:
  *                   type: string
- *                   example: "Update Vision: Succeed"
- *                 updatedVision:
+ *                   example: "Update Task: Succeed"
+ *                 updatedTask:
  *                   type: object
  *                   properties:
  *                     id:
@@ -269,20 +274,20 @@ router.get('/show', visions_controller.show_visions);
  *                       example: 1
  *                     name:
  *                       type: string
- *                       example: "Build an awesome app"
+ *                       example: "Update database schema"
  *                     start_date:
  *                       type: string
  *                       format: date
- *                       example: "2024-02-01"
+ *                       example: "2024-02-10"
  *                     due_date:
  *                       type: string
  *                       format: date
- *                       example: "2024-11-30"
+ *                       example: "2024-04-01"
  *                     finished:
  *                       type: boolean
  *                       example: true
  *       400:
- *         description: Bad request due to validation error or name exists
+ *         description: Bad request due to validation error or task name exists
  *         content:
  *           application/json:
  *             schema:
@@ -293,7 +298,7 @@ router.get('/show', visions_controller.show_visions);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: "Bad Request: Validation or Vision Name Exists in Other Vision"
+ *                   example: "Bad Request: Validation or Task Name Exists in Other Task"
  *       401:
  *         description: Unauthorized due to Token Problem
  *         content:
@@ -308,7 +313,7 @@ router.get('/show', visions_controller.show_visions);
  *                   type: string
  *                   example: "Unauthorized: Token expired"
  *       404:
- *         description: Vision not found or does not belong to user
+ *         description: Task not found or does not belong to goal
  *         content:
  *           application/json:
  *             schema:
@@ -319,9 +324,9 @@ router.get('/show', visions_controller.show_visions);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: "Vision not found or does not belong to user"
+ *                   example: "Task not found or does not belong to goal"
  *       500:
- *         description: Server error during vision update
+ *         description: Server error during task update
  *         content:
  *           application/json:
  *             schema:
@@ -332,17 +337,17 @@ router.get('/show', visions_controller.show_visions);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: "Server Error: Update Vision"
+ *                   example: "Server Error: Update Task"
  */
-router.put('/update', visions_controller.update_vision);
+router.put('/update', token_check, tasks_controller.update_task);
 
 /**
  * @swagger
- * /vision/v1/delete:
+ * /task/v1/delete:
  *   delete:
  *     tags:
- *       - Visions
- *     summary: Delete a vision by ID
+ *       - Tasks
+ *     summary: Delete a task by ID
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -351,16 +356,16 @@ router.put('/update', visions_controller.update_vision);
  *         schema:
  *           type: number
  *         required: true
- *         description: The ID of the vision to be deleted
+ *         description: The ID of the task to be deleted
  *       - in: query
- *         name: user_id
+ *         name: goal_id
  *         schema:
  *           type: number
  *         required: true
- *         description: The user ID of the owner of the vision
+ *         description: The goal ID associated with the task
  *     responses:
  *       200:
- *         description: Vision deleted successfully
+ *         description: Task deleted successfully
  *         content:
  *           application/json:
  *             schema:
@@ -371,7 +376,7 @@ router.put('/update', visions_controller.update_vision);
  *                   example: false
  *                 message:
  *                   type: string
- *                   example: "Delete Vision: Succeed"
+ *                   example: "Delete Task: Succeed"
  *       401:
  *         description: Unauthorized due to Token Problem
  *         content:
@@ -386,7 +391,7 @@ router.put('/update', visions_controller.update_vision);
  *                   type: string
  *                   example: "Unauthorized: Token expired"
  *       404:
- *         description: Vision not found or does not belong to user
+ *         description: Task not found or does not belong to goal
  *         content:
  *           application/json:
  *             schema:
@@ -397,9 +402,9 @@ router.put('/update', visions_controller.update_vision);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: "Vision not found or does not belong to user"
+ *                   example: "Task not found or does not belong to goal"
  *       500:
- *         description: Server error during vision deletion
+ *         description: Server error during task deletion
  *         content:
  *           application/json:
  *             schema:
@@ -410,8 +415,8 @@ router.put('/update', visions_controller.update_vision);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: "Server Error: Delete Vision"
+ *                   example: "Server Error: Delete Task"
  */
-router.delete('/delete', visions_controller.delete_vision);
+router.delete('/delete', token_check, tasks_controller.delete_task);
 
 module.exports = router;
