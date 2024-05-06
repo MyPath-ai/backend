@@ -1,3 +1,12 @@
+// Suppress specific deprecation message (from openAI)
+const originalStderrWrite = process.stderr.write.bind(process.stderr);
+process.stderr.write = (chunk, encoding, callback) => {
+  if (typeof chunk === 'string' && chunk.includes('DeprecationWarning: The `punycode` module is deprecated')) {
+    return false;
+  }
+  return originalStderrWrite(chunk, encoding, callback);
+};
+
 require('dotenv').config();
 const express = require('express');
 const swaggerJsdoc = require('swagger-jsdoc');
@@ -53,6 +62,9 @@ db.connect()
 // Define Routes
 app.use('/auth/v1', require('./routes/auth'));
 app.use('/vision/v1', require('./routes/vision'));
+app.use('/goal/v1', require('./routes/goal'));
+app.use('/task/v1', require('./routes/task'));
+app.use('/ai/v1', require('./routes/ai'));
 
 // Start the server
 const port = process.env.API_PORT || 8080;
