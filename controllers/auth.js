@@ -139,9 +139,8 @@ exports.token_check = async (req, res, next) => {
         }
       });
     });
-
-    const userExists = await check_uid(decoded.id);
-    if (!userExists) {
+    const user_exists = await check_uid(decoded.id);
+    if (user_exists) {
       return res.status(401).json({
         error: true,
         message: 'Unauthorized: Invalid user',
