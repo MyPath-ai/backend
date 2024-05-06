@@ -60,6 +60,7 @@ jobs:
           --set-env-vars "JWT_resetSECRET=${{ secrets.JWT_RESETSECRET }}" \
           --set-env-vars "JWT_EXPIRES_IN=${{ secrets.JWT_EXPIRES_IN }}" \
           --set-env-vars "JWT_COOKIE_EXPIRES=${{ secrets.JWT_COOKIE_EXPIRES }}" \
+          --set-env-vars "OPENAI_API_KEY${{ secrets.OPENAI_API_KEY }}" \
           --port=8080 \
           --region=asia-east1 \
           --platform=managed \
