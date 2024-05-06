@@ -5,7 +5,7 @@ const openai = new OpenAI({
 });
 
 exports.generate_ai_tasks = async (goal_description) => {
-  const prompt = `Please provide a straight-forward, clear, and actionable step-by-step (maximum 10) plan to achieve the following goal: ${goal_description}`;
+  const prompt = `Please provide in simple and minimal word: a straight-forward and clear actionable step-by-step (maximum 10) plan to achieve the following goal: ${goal_description}`;
   try {
     const response = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
