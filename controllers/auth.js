@@ -5,6 +5,7 @@ const { check_email_existence } = require('../db/func/auth/check_email');
 const { insert_user } = require('../db/func/auth/insert_user');
 const { check_login } = require('../db/func/auth/check_login');
 const { check_uid } = require('../db/func/auth/check_uid');
+const { show_user } = require('../db/func/auth/show_user');
 
 exports.register = async (req, res) => {
   try {
@@ -164,6 +165,35 @@ exports.token_check = async (req, res, next) => {
     return res.status(500).json({
       error: true,
       message: 'Server Error: Token Check',
+    });
+  }
+};
+
+exports.getUser = async (req, res) => {
+  try {
+    const schema = Joi.object({
+      id: Joi.number().required(),
+    });
+    const { error, value } = schema.validate(req.query, { abortEarly: false });
+    if (error) {
+      return res.status(400).json({
+        error: true,
+        message: 'Bad Request: Validation',
+      });
+    }
+    const { id } = value;
+    const { name, nickname, email } = await show_user(id);
+    return res.status(200).json({
+      error: false,
+      name,
+      nickname,
+      email,
+    });
+  } catch (err) {
+    console.error('GetUser Server Error: ', err);
+    return res.status(500).json({
+      error: true,
+      message: 'Server Error: getUser',
     });
   }
 };

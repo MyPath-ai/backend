@@ -188,6 +188,69 @@ router.post('/register', auth_controller.register);
  *                   example: 'Server Error: Login'
  */
 router.post('/login', auth_controller.login);
+
+/**
+ * @swagger
+ * /auth/v1/get_user:
+ *   get:
+ *     tags:
+ *       - Authentication
+ *     security:
+ *       - bearerAuth: []
+ *     summary: Fetch user details
+ *     parameters:
+ *       - name: id
+ *         in: query
+ *         required: true
+ *         schema:
+ *           type: number
+ *           example: 1
+ *     responses:
+ *       200:
+ *         description: User details retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 name:
+ *                   type: string
+ *                   example: 'John Doe'
+ *                 nickname:
+ *                   type: string
+ *                   example: 'Johnny'
+ *                 email:
+ *                   type: string
+ *                   example: 'user@example.com'
+ *       400:
+ *         description: Bad request due to validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: 'Bad Request: Validation'
+ *       500:
+ *         description: Server error during user detail retrieval
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: 'Server Error: GetUser'
+ */
+router.get('/get_user', auth_controller.token_check, auth_controller.getUser);
+
 router.post('/logout', auth_controller.logout);
 
 module.exports = router;
